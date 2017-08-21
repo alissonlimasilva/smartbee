@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`Colmeias` (
+  `idColmeia` VARCHAR(55) NOT NULL,
+  `latitude` VARCHAR(45) NULL,
+  `longitude` VARCHAR(45) NULL,
+  `datacriacao` VARCHAR(10) NOT NULL,
+  `numerocoletas` INT NULL,
+  `idApiario` INT NOT NULL,
+  PRIMARY KEY (`idColmeia`),
+  CONSTRAINT `fk_Colmeias_Apiario`
+    FOREIGN KEY (`idApiario`)
+    REFERENCES `smartbee_projeto`.`Apiario` (`idApiario`);

@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`Apiario` (
+  `idApiario` INT NOT NULL AUTO_INCREMENT,
+  `descricao` VARCHAR(45) NOT NULL,
+  `apiario_latitude` VARCHAR(45) NULL,
+  `apiario_longitude` VARCHAR(45) NULL,
+  PRIMARY KEY (`idApiario`))
