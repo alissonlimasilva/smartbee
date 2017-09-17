@@ -73,7 +73,7 @@ void loop(void){
     Serial.print(co2);
     Serial.print(" ");
     //Serial.print("Tensao sensor: ");
-    Serial.println(tensaosensor1)
+    Serial.println(tensaosensor1);
     Serial.print(" ");
     //Serial.print("Tensao repetidor: "); 
     Serial.println(tensaorepetidor2);   

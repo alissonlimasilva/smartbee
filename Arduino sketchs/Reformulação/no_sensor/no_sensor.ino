@@ -91,7 +91,7 @@ void loop() {
     //ler sensores
     lerDHT();
     lerMQandKy();
-    //lerTensao();
+    lerTensao();
     
     //cria mensagem a ser enviada
     concatena();

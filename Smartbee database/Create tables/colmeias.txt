@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`Colmeias` (
+CREATE TABLE IF NOT EXISTS Colmeias (
   `idColmeia` VARCHAR(55) NOT NULL,
   `latitude` VARCHAR(45) NULL,
   `longitude` VARCHAR(45) NULL,
@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`Colmeias` (
   PRIMARY KEY (`idColmeia`),
   CONSTRAINT `fk_Colmeias_Apiario`
     FOREIGN KEY (`idApiario`)
-    REFERENCES `smartbee_projeto`.`Apiario` (`idApiario`);
+    REFERENCES `smartbee_projeto`.`Apiario` (`idApiario`));
