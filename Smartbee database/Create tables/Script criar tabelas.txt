@@ -1,0 +1,156 @@
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`users` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `address` VARCHAR(255) NOT NULL,
+  `phone` VARCHAR(255) NOT NULL,
+  `cellphone` VARCHAR(255) NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `confirmed` TINYINT(1) NULL DEFAULT '0',
+  `admin` TINYINT(1) NULL DEFAULT '0',
+  `last_login` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `remember_token` VARCHAR(255) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `users_email_unique` (`email` ASC))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`sensor` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `tipo` VARCHAR(255) NOT NULL,
+  `descricao` VARCHAR(255) NOT NULL,
+  `modelo` VARCHAR(255) NOT NULL,
+  `marca` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`apiario` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `endereco` VARCHAR(255) NOT NULL,
+  `latitude` VARCHAR(255) NULL DEFAULT NULL,
+  `longitude` VARCHAR(255) NULL DEFAULT NULL,
+  `descricao` TEXT NOT NULL,
+  `login_cadastro` INT(11) UNSIGNED NOT NULL,
+  `login_alteracao` INT(11) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_apiario_login_cadastro` (`login_cadastro` ASC),
+  INDEX `fk_apiario_login_alteracao` (`login_alteracao` ASC))
+ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`colmeia_fundo` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `descricao` TEXT NOT NULL,
+  `login_cadastro` INT(11) UNSIGNED NOT NULL,
+  `login_alteracao` INT(11) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_colmeia_fundo_login_cadastro` (`login_cadastro` ASC),
+  INDEX `fk_colmeia_fundo_login_alteracao` (`login_alteracao` ASC))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`colmeia_tipo` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `descricao` TEXT NOT NULL,
+  `login_cadastro` INT(11) UNSIGNED NOT NULL,
+  `login_alteracao` INT(11) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_colmeia_tipo_login_cadastro` (`login_cadastro` ASC),
+  INDEX `fk_colmeia_tipo_login_alteracao` (`login_alteracao` ASC))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`colmeia_origem` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `descricao` TEXT NOT NULL,
+  `login_cadastro` INT(11) UNSIGNED NOT NULL,
+  `login_alteracao` INT(11) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_colmeia_origem_login_cadastro` (`login_cadastro` ASC),
+  INDEX `fk_colmeia_origem_login_alteracao` (`login_alteracao` ASC))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`colmeia_estado` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `descricao` TEXT NOT NULL,
+  `login_cadastro` INT(11) UNSIGNED NOT NULL,
+  `login_alteracao` INT(11) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_colmeia_estado_login_cadastro` (`login_cadastro` ASC),
+  INDEX `fk_colmeia_estado_login_alteracao` (`login_alteracao` ASC))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`cliente` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `endereco` VARCHAR(255) NOT NULL,
+  `telefone` VARCHAR(255) NOT NULL,
+  `celular` VARCHAR(255) NOT NULL,
+  `login_cadastro` INT(11) UNSIGNED NOT NULL,
+  `login_alteracao` INT(11) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `cliente_email_unique` (`email` ASC),
+  INDEX `fk_cliente_login_cadastro` (`login_cadastro` ASC),
+  INDEX `fk_cliente_login_alteracao` (`login_alteracao` ASC))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`colmeia` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `caixilho` INT(11) NOT NULL,
+  `latitude` VARCHAR(255) NULL DEFAULT NULL,
+  `longitude` VARCHAR(255) NULL DEFAULT NULL,
+  `colmeia_tipo_id` INT(11) UNSIGNED NOT NULL,
+  `colmeia_fundo_id` INT(11) UNSIGNED NOT NULL,
+  `colmeia_origem_id` INT(11) UNSIGNED NOT NULL,
+  `login_cadastro` INT(11) UNSIGNED NOT NULL,
+  `login_alteracao` INT(11) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_colmeia_tipo` (`colmeia_tipo_id` ASC),
+  INDEX `fk_colmeia_fundo` (`colmeia_fundo_id` ASC),
+  INDEX `fk_colmeia_origem` (`colmeia_origem_id` ASC),
+  INDEX `fk_colmeia_cadastro` (`login_cadastro` ASC),
+  INDEX `fk_colmeia_alteracao` (`login_alteracao` ASC))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `smartbee_projeto`.`colmeia_coleta` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `colmeia_id` INT(11) UNSIGNED NOT NULL,
+  `sensor_id` INT NOT NULL,
+  `created_at` TIMESTAMP NULL,
+  `valor` TEXT(10) NOT NULL,
+  INDEX `fk_colmeia` (`colmeia_id` ASC),
+  INDEX `fk_sensor` (`sensor_id` ASC),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `sensor_id_fk`
+    FOREIGN KEY (`sensor_id`)
+    REFERENCES `smartbee_projeto`.`sensor` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;

@@ -1,5 +1,29 @@
 #!/usr/bin/python
 
+""" An example of a Linux daemon written in Python.
+
+
+
+Based on http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
+
+
+
+The changes are:
+
+1 - Uses file open context managers instead of calls to file().
+
+2 - Forces stdin to /dev/null. stdout and stderr go to log files.
+
+3 - Uses print instead of sys.stdout.write prior to pointing stdout to the log file.
+
+4 - Omits try/excepts if they only wrap one error message w/ another.
+
+
+
+i - http://stackoverflow.com/questions/3263672/python-the-difference-between-sys-stdout-write-and-print
+
+"""
+
 import atexit
 
 import requests
@@ -239,11 +263,12 @@ class Daemon(object):
 	porta = "/dev/ttyACM0"
 
 	velocidade = 57600
+
+	urlFiware = "http://35.199.66.232:8080/webservice/coleta/add"
+	#CHAVES DE CANAL
 	COLMEIA1='ODQHRWU1WIPGH2CK'
 	COLMEIA2='Z63X9L46JZFPDUWZ'
-
-	urlFiware = "http://35.184.233.148:1026/v1/updateContext"
-
+	COLMEIA3='NCFLS5NZV3MPWKAU'
 	
 
 	try:
@@ -258,25 +283,14 @@ class Daemon(object):
 		while 1:
 
 			leitura = conexao.readline()
-
+#			leitura = "1 24 54 12 12"
 			valores = leitura.split(' ')
 
-			if leitura != "" and len(valores) == 7:
-
-
-
-				#Adiciona os cabecaalhos a requisicao
+			if leitura != "" and len(valores) == 5:
 
 				headers = {
-
-					'Content-Type':'application/json',
-
-					'Fiware-Service': 'tcc',
-
-					'Fiware-ServicePath': '/',
-
+					'Content-Type':'application/json'
 				}
-
 				#Preparacao dos dados para enviar
 
 				data1 = open('/etc/smartbee/json.json','r')
@@ -286,17 +300,6 @@ class Daemon(object):
 				data1.close()
 
 				
-
-				#Obter data e hora
-
-				a = datetime.datetime.now()
-
-				data_atual = str(a.strftime('%d/%m/%y'))
-
-				hora = str(a.strftime('%H:%M:%S'))
-
-				
-
 				#Alterar o atributos principais do JSON
 
 				#IdColmeia
@@ -311,31 +314,12 @@ class Daemon(object):
 
 				data = data.replace('$3', valores[2])
 
-				#Som
+				#Tensao Sensores
 
 				data = data.replace('$4', valores[3])
 
-				#Data
-
-				data = data.replace('$5', data_atual)
-
-				#Hora
-
-				data = data.replace('$6', hora)
-
-				#Co2
-
-				data = data.replace('$7', valores[4])
-
-				#TensaoColmeia
-
-				data = data.replace('$8', valores[5])
-
-				#TensaoRepetidor
-
-				data = data.replace('$9', valores[6])
-
-				
+				#Tensao Repetidores
+				data = data.replace('$5', valores[4])
 
 				#Consertando erros no arquivo JSON
 
@@ -351,30 +335,43 @@ class Daemon(object):
 				data = data.replace('}\"', '}')
 
 				status_requisicao = ''
-				
-				#ENVIANDO REQUISICAO PARA THINKSPEAK
-				id_key='';
-				if (valores[0] == 'Colmeia1'):
-					id_key = COLMEIA1
-				elif (valores[0] == 'Colmeia2'):			
-					id_key = COLMEIA2
-					
+				with open('/etc/smartbee/json.txt', 'a') as arq:
+                                        arq.write(data+'\n')
+
 						
 				with open('/etc/smartbee/leituras.txt', 'a') as arq:
 
 					arq.write(leitura+'\n')
-			
+
+				status_requisicao = ''
+
+				
+
+				#ENVIANDO REQUISICAO PARA THINKSPEAK
+
+				id_key='';
+
+				if (valores[0] == 1):
+
+					id_key = COLMEIA1
+
+				elif (valores[0] == 2):			
+
+					id_key = COLMEIA2
+				elif (valores[0] == 3):
+					id_key = COLMEIA3
 				try:
 					r = requests.post(urlFiware, headers=headers, data=data)
-					url="https://api.thingspeak.com/update?api_key=%s&field1=%s&field2=%s&field3=%s&field4=%s&field5=%s&field6=%s" %(id_key,valores[1], valores[2], valores[3], valores[4], valores[5], valores[6])
+					#ENVIA ATUALIZACAO DE VALORES THINKSPEAK
+					url="http://api.thingspeak.com/update?api_key=%s&field1=%s&field2=%s&field3=%s&field4=%s" %(id_key,valores[1], valores[2], valores[3], valores[4], valores[5])
 					r = requests.get(url)
-				except urllib3.connection.HTTPConnection as err:
+				except requests.exceptions as err:
 					with open('/var/log/smartbee/smartbee_err.log', 'a') as arq:
 			                        arq.write(str(err)+'\n')
 				except Exception as err:
                                         with open('/var/log/smartbee/smartbee_err.log', 'a') as arq:
 						arq.write(str(err)+'\n')
-
+			
 	except Exception as err:
 
 		with open('/var/log/smartbee/smartbee_err.log', 'a') as arq:
